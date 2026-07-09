@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import ScreenContainer from "../../../components/ScreenContainer";
+import Header from "../../../components/Header";
 
 export default function Profile() {
   return (

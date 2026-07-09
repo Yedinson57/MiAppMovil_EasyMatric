@@ -5,14 +5,6 @@ import Header from "../../../components/Header";
 export default function HomeScreen() {
   return (
     <ScreenContainer>
-
-      <Header
-        userName="Yedinson"
-        greeting="Good morning"
-        showNotification
-        showMenu
-      />
-
       <View style={styles.content}>
         <Text style={styles.title}>
           Bienvenido a EASYmatric
