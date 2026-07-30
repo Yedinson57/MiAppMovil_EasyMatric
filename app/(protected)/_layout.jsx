@@ -15,33 +15,28 @@ export default function Layout() {
       }}
     >
       <Drawer.Screen
-        name="index"
-        options={{ title: " Inicio" }}
+        name="(tabs)"
+        options={{ title: "Inicio", drawerLabel: "Inicio" }}
       />
 
       <Drawer.Screen
-        name="nosotros"
-        options={{ title: " Nosotros" }}
+        name="about"
+        options={{ title: "Nosotros" }}
       />
 
       <Drawer.Screen
-        name="servicios"
-        options={{ title: " Servicios" }}
+        name="services"
+        options={{ title: "Servicios" }}
       />
 
       <Drawer.Screen
-        name="preguntas"
-        options={{ title: " Preguntas" }}
+        name="faq"
+        options={{ title: "Preguntas" }}
       />
 
       <Drawer.Screen
-        name="contacto"
-        options={{ title: " Contacto" }}
-      />
-
-      <Drawer.Screen
-        name="login"
-        options={{ title: " Iniciar sesión" }}
+        name="contact"
+        options={{ title: "Contacto" }}
       />
     </Drawer>
   );
