@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {View,Text,StyleSheet,ScrollView,TextInput,Image,TouchableOpacity,ActivityIndicator,} from "react-native";
+import { View, Text, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { useRouter } from "expo-router"; // 1. Importar useRouter
 import ScreenContainer from "../../../components/ScreenContainer";
 
 export default function Institutions() {
+  const router = useRouter(); // 2. Inicializar router
   const [instituciones, setInstituciones] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
-  // Consumo de API mediante Fetch
   useEffect(() => {
     const obtenerInstituciones = async () => {
       try {
-        // URL de prueba simulada
         const respuesta = await fetch("https://jsonplaceholder.typicode.com/users");
-        
-        if (!respuesta.ok) {
-          throw new Error("No se pudieron cargar las instituciones.");
-        }
-
+        if (!respuesta.ok) throw new Error("No se pudieron cargar las instituciones.");
         const datos = await respuesta.json();
 
-        // Mapeamos o adaptamos la respuesta de la API a nuestro formato
         const datosAdaptados = datos.map((item) => ({
           id: item.id.toString(),
           nombre: `I.E. ${item.company.name}`,
@@ -45,11 +40,7 @@ export default function Institutions() {
 
   return (
     <ScreenContainer>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Encabezado de la vista (Ahora inicia directo desde aquí) */}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.headerTitle}>
           <Text style={styles.title}>Instituciones Disponibles</Text>
           <Text style={styles.subtitle}>
@@ -57,7 +48,6 @@ export default function Institutions() {
           </Text>
         </View>
 
-        {/* Buscador */}
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Buscar sede o municipio..."
@@ -66,7 +56,6 @@ export default function Institutions() {
           />
         </View>
 
-        {/* Estado de Carga */}
         {cargando && (
           <View style={styles.centerState}>
             <ActivityIndicator size="large" color="#4facfe" />
@@ -74,19 +63,16 @@ export default function Institutions() {
           </View>
         )}
 
-        {/* Estado de Error */}
         {error !== "" && !cargando && (
           <View style={styles.centerState}>
             <Text style={styles.errorText}>⚠️ {error}</Text>
           </View>
         )}
 
-        {/* Lista de Tarjetas */}
         {!cargando && !error && (
           <View style={styles.cardsList}>
             {instituciones.map((item) => (
               <View key={item.id} style={styles.card}>
-                {/* Imagen y Badge de Estado */}
                 <View style={styles.imageContainer}>
                   <Image source={{ uri: item.imagen }} style={styles.cardImage} />
                   <View
@@ -100,7 +86,6 @@ export default function Institutions() {
                   </View>
                 </View>
 
-                {/* Información del Colegio */}
                 <View style={styles.cardBody}>
                   <Text style={styles.institutionName}>{item.nombre}</Text>
                   <Text style={styles.locationText}>📍 {item.ubicacion}</Text>
@@ -110,7 +95,17 @@ export default function Institutions() {
                     <Text style={styles.detailItem}>🕒 {item.jornada}</Text>
                   </View>
 
-                  <TouchableOpacity style={styles.btnMore} activeOpacity={0.8}>
+                  {/* 3. Evento onPress configurado */}
+                  <TouchableOpacity
+                    style={styles.btnMore}
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/institution-detail", // Ajusta esta ruta a tu archivo/pantalla
+                        params: { id: item.id, nombre: item.nombre, ubicacion: item.ubicacion },
+                      })
+                    }
+                  >
                     <Text style={styles.btnMoreText}>Ver más información</Text>
                   </TouchableOpacity>
                 </View>
@@ -122,6 +117,8 @@ export default function Institutions() {
     </ScreenContainer>
   );
 }
+
+// Manten los mismos estilos...
 
 const styles = StyleSheet.create({
   scrollContent: {
