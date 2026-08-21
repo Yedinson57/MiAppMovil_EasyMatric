@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -19,6 +20,8 @@ export default function AdminLayout() {
     <Drawer
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
+        headerShown: true,
+        drawerType: "front", // Forzar vista flotante estilo móvil
         headerStyle: {
           backgroundColor: "#152e4d",
         },
@@ -28,6 +31,7 @@ export default function AdminLayout() {
           fontSize: 16,
         },
         drawerStyle: {
+          backgroundColor: "#FFFFFF",
           width: 300,
         },
       }}
@@ -40,13 +44,33 @@ export default function AdminLayout() {
         }}
       />
       <Drawer.Screen
+        name="registerschool"
+        options={{
+          title: "Registrar Escuela",
+          drawerLabel: "Registrar Escuela",
+        }}
+      />
+      <Drawer.Screen
+        name="matriculas"
+        options={{
+          title: "Matrículas",
+          drawerLabel: "Matrículas",
+        }}
+      />
+      <Drawer.Screen
         name="students"
         options={{
           title: "Estudiantes",
           drawerLabel: "Estudiantes",
         }}
       />
-      
+      <Drawer.Screen
+        name="roles"
+        options={{
+          title: "Roles",
+          drawerLabel: "Roles",
+        }}
+      />
       <Drawer.Screen
         name="reports"
         options={{
@@ -57,8 +81,22 @@ export default function AdminLayout() {
       <Drawer.Screen
         name="catalogs"
         options={{
-          title: "catalogos",
-          drawerLabel: "catalogos",
+          title: "Catálogos",
+          drawerLabel: "Catálogos",
+        }}
+      />
+      <Drawer.Screen
+        name="perfil"
+        options={{
+          title: "Perfil",
+          drawerLabel: "Perfil",
+        }}
+      />
+      <Drawer.Screen
+        name="documentation"
+        options={{
+          title: "Revisión Documentación",
+          drawerLabel: "Revisión Documentación",
         }}
       />
       <Drawer.Screen
@@ -74,23 +112,32 @@ export default function AdminLayout() {
 
 function CustomDrawerContent() {
   const handleLogout = () => {
-    Alert.alert(
-      "Cerrar sesión",
-      "¿Estás seguro de que deseas cerrar sesión?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Cerrar sesión",
-          style: "destructive",
-          onPress: () => {
-            router.replace("/(auth)/login");
+    if (Platform.OS === "web") {
+      const confirmLogout = window.confirm(
+        "¿Estás seguro de que deseas cerrar sesión?"
+      );
+      if (confirmLogout) {
+        router.replace("/(auth)/login");
+      }
+    } else {
+      Alert.alert(
+        "Cerrar sesión",
+        "¿Estás seguro de que deseas cerrar sesión?",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
           },
-        },
-      ]
-    );
+          {
+            text: "Cerrar sesión",
+            style: "destructive",
+            onPress: () => {
+              router.replace("/(auth)/login");
+            },
+          },
+        ]
+      );
+    }
   };
 
   return (
@@ -118,18 +165,43 @@ function CustomDrawerContent() {
             onPress={() => router.push("/(protected)/(admin)")}
           />
           <DrawerItem
+            icon="plus-circle-outline"
+            label="Registrar Escuela"
+            onPress={() => router.push("/(protected)/(admin)/registerschool")}
+          />
+          <DrawerItem
+            icon="document-text-outline"
+            label="Matrículas"
+            onPress={() => router.push("/(protected)/(admin)/matriculas")}
+          />
+          <DrawerItem
             icon="people-outline"
             label="Estudiantes"
             onPress={() => router.push("/(protected)/(admin)/students")}
           />
-           <DrawerItem
-            icon="document-text-outline"
-            label="Calogo"
+          <DrawerItem
+            icon="shield-outline"
+            label="Roles"
+            onPress={() => router.push("/(protected)/(admin)/roles")}
+          />
+          <DrawerItem
+            icon="folder-open-outline"
+            label="Catálogos"
             onPress={() => router.push("/(protected)/(admin)/catalogs")}
+          />
+          <DrawerItem
+            icon="person-outline"
+            label="Perfil"
+            onPress={() => router.push("/(protected)/(admin)/perfil")}
           />
           <DrawerItem
             icon="bar-chart-outline"
             label="Reportes"
+            onPress={() => router.push("/(protected)/(admin)/reports")}
+          />
+          <DrawerItem
+            icon="checkbox-outline"
+            label="Documentación"
             onPress={() => router.push("/(protected)/(admin)/documentation")}
           />
         </View>
