@@ -1,12 +1,36 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import ScreenContainer from "../../components/ScreenContainer";
 import Logo from "../../components/Logo";
 import Colors from "../../constants/colors";
 
+const validationSchema = Yup.object().shape({
+  nombre: Yup.string()
+    .required("El nombre es obligatorio")
+    .min(2, "El nombre debe tener al menos 2 caracteres"),
+
+  email: Yup.string()
+    .email("Correo electrónico inválido")
+    .required("El correo es obligatorio"),
+
+  password: Yup.string()
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
+    .required("La contraseña es obligatoria"),
+
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Las contraseñas no coinciden")
+    .required("Debes confirmar la contraseña"),
+
+  role: Yup.string()
+    .required("Debes seleccionar un rol"),
+});
+
 export default function Register() {
+
   const roles = [
     {
       id: "admin",
@@ -28,171 +52,452 @@ export default function Register() {
     },
   ];
 
-  function handleSelectRole(roleId) {
-    // Redirige al formulario enviando el rol seleccionado
-    router.push({
-      pathname: "/form",
-      params: { role: roleId },
-    });
-  }
+  const formik = useFormik({
+    initialValues: {
+      nombre: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "",
+    },
+
+    validationSchema,
+
+    onSubmit: (values) => {
+      Alert.alert(
+        "Registro exitoso",
+        `Usuario: ${values.nombre}\nRol: ${values.role}`
+      );
+
+      console.log("Datos enviados:", values);
+
+      // Por ahora regresamos al login
+      router.replace("/(auth)/login");
+    },
+  });
 
   return (
     <ScreenContainer>
-      <View style={styles.content}>
+
+      <View style={styles.container}>
+
         <Logo />
 
-        <Text style={styles.title}>Bienvenido a EasyMatric</Text>
-        <Text style={styles.subtitle}>
-          Selecciona tu perfil para continuar con el registro
+        <Text style={styles.title}>
+          Crear cuenta
         </Text>
 
-        {/* Lista de perfiles */}
+        <Text style={styles.subtitle}>
+          Completa tus datos para registrarte en EasyMatric
+        </Text>
+
+
+        {/* NOMBRE */}
+
+        <View style={styles.fieldContainer}>
+
+          <Text style={styles.label}>
+            Nombre completo
+          </Text>
+
+          <TextInput
+            style={[
+              styles.input,
+              formik.touched.nombre &&
+              formik.errors.nombre &&
+              styles.inputError,
+            ]}
+            placeholder="Ej. Carlos Mendoza"
+            placeholderTextColor="#94A3B8"
+            onChangeText={formik.handleChange("nombre")}
+            onBlur={formik.handleBlur("nombre")}
+            value={formik.values.nombre}
+          />
+
+          {formik.touched.nombre && formik.errors.nombre && (
+            <Text style={styles.errorText}>
+              {formik.errors.nombre}
+            </Text>
+          )}
+
+        </View>
+
+
+        {/* EMAIL */}
+
+        <View style={styles.fieldContainer}>
+
+          <Text style={styles.label}>
+            Correo electrónico
+          </Text>
+
+          <TextInput
+            style={[
+              styles.input,
+              formik.touched.email &&
+              formik.errors.email &&
+              styles.inputError,
+            ]}
+            placeholder="correo@ejemplo.com"
+            placeholderTextColor="#94A3B8"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            onChangeText={formik.handleChange("email")}
+            onBlur={formik.handleBlur("email")}
+            value={formik.values.email}
+          />
+
+          {formik.touched.email && formik.errors.email && (
+            <Text style={styles.errorText}>
+              {formik.errors.email}
+            </Text>
+          )}
+
+        </View>
+
+
+        {/* CONTRASEÑA */}
+
+        <View style={styles.fieldContainer}>
+
+          <Text style={styles.label}>
+            Contraseña
+          </Text>
+
+          <TextInput
+            style={[
+              styles.input,
+              formik.touched.password &&
+              formik.errors.password &&
+              styles.inputError,
+            ]}
+            placeholder="Mínimo 6 caracteres"
+            placeholderTextColor="#94A3B8"
+            secureTextEntry
+            onChangeText={formik.handleChange("password")}
+            onBlur={formik.handleBlur("password")}
+            value={formik.values.password}
+          />
+
+          {formik.touched.password && formik.errors.password && (
+            <Text style={styles.errorText}>
+              {formik.errors.password}
+            </Text>
+          )}
+
+        </View>
+
+
+        {/* CONFIRMAR CONTRASEÑA */}
+
+        <View style={styles.fieldContainer}>
+
+          <Text style={styles.label}>
+            Confirmar contraseña
+          </Text>
+
+          <TextInput
+            style={[
+              styles.input,
+              formik.touched.confirmPassword &&
+              formik.errors.confirmPassword &&
+              styles.inputError,
+            ]}
+            placeholder="Repite tu contraseña"
+            placeholderTextColor="#94A3B8"
+            secureTextEntry
+            onChangeText={formik.handleChange("confirmPassword")}
+            onBlur={formik.handleBlur("confirmPassword")}
+            value={formik.values.confirmPassword}
+          />
+
+          {formik.touched.confirmPassword &&
+            formik.errors.confirmPassword && (
+              <Text style={styles.errorText}>
+                {formik.errors.confirmPassword}
+              </Text>
+            )}
+
+        </View>
+
+
+        {/* SELECCIÓN DE ROL */}
+
+        <Text style={styles.labelRol}>
+          Selecciona tu rol
+        </Text>
+
         <View style={styles.rolesContainer}>
-          {roles.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.card}
-              onPress={() => handleSelectRole(item.id)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.iconBox}>
-                <Ionicons name={item.icon} size={24} color={Colors.primary} />
-              </View>
 
-              <View style={styles.cardTextContainer}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
-              </View>
+          {roles.map((item) => {
 
-              <Ionicons name="chevron-forward" size={20} color="#CBD5E1" />
-            </TouchableOpacity>
-          ))}
+            const selected = formik.values.role === item.id;
+
+            return (
+              <TouchableOpacity
+                key={item.id}
+                style={[
+                  styles.roleCard,
+                  selected && styles.roleCardSelected,
+                ]}
+                onPress={() =>
+                  formik.setFieldValue("role", item.id)
+                }
+                activeOpacity={0.7}
+              >
+
+                <View
+                  style={[
+                    styles.iconBox,
+                    selected && styles.iconBoxSelected,
+                  ]}
+                >
+
+                  <Ionicons
+                    name={item.icon}
+                    size={22}
+                    color={
+                      selected
+                        ? "#FFFFFF"
+                        : Colors.primary
+                    }
+                  />
+
+                </View>
+
+                <View style={styles.roleTextContainer}>
+
+                  <Text style={styles.roleTitle}>
+                    {item.title}
+                  </Text>
+
+                  <Text style={styles.roleSubtitle}>
+                    {item.subtitle}
+                  </Text>
+
+                </View>
+
+                {selected && (
+                  <Ionicons
+                    name="checkmark-circle"
+                    size={22}
+                    color={Colors.primary}
+                  />
+                )}
+
+              </TouchableOpacity>
+            );
+          })}
+
         </View>
 
-        {/* Enlace a Login */}
+        {formik.touched.role && formik.errors.role && (
+          <Text style={styles.errorText}>
+            {formik.errors.role}
+          </Text>
+        )}
+
+
+        {/* BOTÓN */}
+
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={formik.handleSubmit}
+          disabled={formik.isSubmitting}
+          activeOpacity={0.8}
+        >
+
+          <Text style={styles.registerButtonText}>
+            Registrarse
+          </Text>
+
+          <Ionicons
+            name="arrow-forward"
+            size={20}
+            color="#FFFFFF"
+          />
+
+        </TouchableOpacity>
+
+
+        {/* LOGIN */}
+
         <View style={styles.loginRow}>
-          <Text style={styles.loginText}>¿Ya tienes cuenta? </Text>
-          <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
-            <Text style={styles.loginLink}>Inicia sesión</Text>
+
+          <Text style={styles.loginText}>
+            ¿Ya tienes una cuenta?
+          </Text>
+
+          <TouchableOpacity
+            onPress={() =>
+              router.replace("/(auth)/login")
+            }
+          >
+
+            <Text style={styles.loginLink}>
+              Inicia sesión
+            </Text>
+
           </TouchableOpacity>
+
         </View>
 
-        {/* Botones inferiores opcionales */}
-        <View style={styles.bottomButtons}>
-          <TouchableOpacity 
-            style={styles.secondaryButton} 
-            onPress={() => router.replace("/(auth)/login")}
-          >
-            <Ionicons name="home-outline" size={16} color={Colors.primary} />
-            <Text style={styles.secondaryButtonText}>Inicio</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.secondaryButton} 
-            onPress={() => router.push("/faq")}
-          >
-            <Ionicons name="headset-outline" size={16} color={Colors.primary} />
-            <Text style={styles.secondaryButtonText}>Soporte</Text>
-          </TouchableOpacity>
-        </View>
       </View>
+
     </ScreenContainer>
   );
 }
 
+
 const styles = StyleSheet.create({
-  content: {
+
+  container: {
     flex: 1,
     padding: 24,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#FFFFFF",
   },
+
   title: {
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: "700",
     color: "#0F172A",
-    marginTop: 20,
+    marginTop: 15,
     textAlign: "center",
   },
+
   subtitle: {
     fontSize: 13,
     color: "#64748B",
     marginTop: 6,
-    marginBottom: 24,
+    marginBottom: 20,
     textAlign: "center",
   },
-  rolesContainer: {
-    width: "100%",
-    gap: 12,
+
+  fieldContainer: {
+    marginBottom: 10,
   },
-  card: {
+
+  label: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#334155",
+    marginBottom: 6,
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#CBD5E1",
+    borderRadius: 10,
+    paddingHorizontal: 13,
+    paddingVertical: 11,
+    fontSize: 15,
+    color: "#0F172A",
+    backgroundColor: "#FFFFFF",
+  },
+
+  inputError: {
+    borderColor: "#DC2626",
+  },
+
+  errorText: {
+    color: "#DC2626",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 3,
+  },
+
+  labelRol: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#334155",
+    marginTop: 5,
+    marginBottom: 8,
+  },
+
+  rolesContainer: {
+    gap: 8,
+  },
+
+  roleCard: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#F8FAFC",
-    padding: 16,
-    borderRadius: 16,
+    padding: 10,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: "#E2E8F0",
   },
+
+  roleCardSelected: {
+    borderColor: Colors.primary,
+    backgroundColor: "#EFF6FF",
+  },
+
   iconBox: {
-    width: 46,
-    height: 46,
-    borderRadius: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
   },
-  cardTextContainer: {
+
+  iconBoxSelected: {
+    backgroundColor: Colors.primary,
+  },
+
+  roleTextContainer: {
     flex: 1,
-    marginLeft: 14,
+    marginLeft: 10,
   },
-  cardTitle: {
-    fontSize: 15,
+
+  roleTitle: {
+    fontSize: 14,
     fontWeight: "700",
     color: "#0F172A",
   },
-  cardSubtitle: {
-    fontSize: 12,
+
+  roleSubtitle: {
+    fontSize: 11,
     color: "#64748B",
     marginTop: 2,
   },
+
+  registerButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: Colors.primary,
+    paddingVertical: 13,
+    borderRadius: 10,
+    marginTop: 18,
+  },
+
+  registerButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+
   loginRow: {
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    marginTop: 28,
+    marginTop: 18,
   },
+
   loginText: {
     color: "#64748B",
-    fontSize: 14,
-  },
-  loginLink: {
-    color: Colors.primary,
-    fontWeight: "700",
-    fontSize: 14,
-  },
-  bottomButtons: {
-    flexDirection: "row",
-    gap: 12,
-    marginTop: 20,
-  },
-  secondaryButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: "#F1F5F9",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  secondaryButtonText: {
-    color: Colors.primary,
-    fontWeight: "600",
     fontSize: 13,
   },
+
+  loginLink: {
+    color: Colors.primary,
+    fontSize: 13,
+    fontWeight: "700",
+    marginLeft: 5,
+  },
+
 });
