@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   TextInput,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -12,18 +11,43 @@ import { Ionicons } from "@expo/vector-icons";
 
 import ScreenContainer from "../../components/ScreenContainer";
 import Logo from "../../components/Logo";
-import RoleSelector from "../../components/RoleSelector";
 import Colors from "../../constants/colors";
+
+// Definición de roles con sus íconos
+const ROLES = [
+  { id: "student", label: "Student", icon: "school-outline" },
+  { id: "teacher", label: "Teacher", icon: "person-outline" },
+  { id: "admin", label: "Admin", icon: "shield-checkmark-outline" },
+];
+
+// Diccionario de usuarios demo válidos
+const DEMO_USERS = {
+  "admin@soy.easymatric.edu": {
+    password: "admin123",
+    role: "admin",
+    route: "/(protected)/(admin)",
+  },
+  "instructor@soy.easymatric.edu": {
+    password: "instructor124",
+    role: "teacher",
+    route: "/(protected)/(teacher)",
+  },
+  "aprendiz@soy.easymatric.edu": {
+    password: "aprendiz789",
+    role: "student",
+    route: "/(protected)/(tabs)",
+  },
+};
 
 export default function Login() {
   const router = useRouter();
 
-  // Estados de formulario
+  // Estados del formulario
   const [role, setRole] = useState("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Estados de errores de validación
+  // Estados de errores para mostrar directo en la interfaz
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -32,9 +56,8 @@ export default function Login() {
     let isValid = true;
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
-    const cleanRole = (role || "").toString().toLowerCase().trim();
 
-    // Validar Email
+    // 1. Validar campo Email (Formato)
     if (!cleanEmail) {
       setEmailError("El correo es obligatorio");
       isValid = false;
@@ -45,7 +68,7 @@ export default function Login() {
       setEmailError("");
     }
 
-    // Validar Contraseña
+    // 2. Validar campo Contraseña (Formato)
     if (!cleanPassword) {
       setPasswordError("La contraseña es obligatoria");
       isValid = false;
@@ -58,28 +81,35 @@ export default function Login() {
 
     if (!isValid) return;
 
-    // Identificación flexible del rol seleccionado
-    const isAdminRole = cleanRole.includes("admin") || cleanRole === "administrador";
-    const isTeacherRole = cleanRole.includes("teacher") || cleanRole.includes("docente") || cleanRole.includes("instructor");
-    const isStudentRole = cleanRole.includes("student") || cleanRole.includes("estudiante") || cleanRole.includes("aprendiz");
+    // 3. Verificar si el correo existe en la base de datos
+    const user = DEMO_USERS[cleanEmail];
 
-    // Verificación de credenciales demo
-    const isAdminUser = (cleanEmail === "admin@soy.easymatric.edu" || cleanEmail === "admin@soy.easymatric.edu") && cleanPassword === "admin123";
-    const isTeacherUser = (cleanEmail === "instructor@soy.easymatric.edu" || cleanEmail === "instructor@soy.easymatric.edu") && cleanPassword === "instructor124";
-    const isStudentUser = (cleanEmail === "aprendiz@soy.easymatric.edu" || cleanEmail === "aprendiz@soy.easymatric.edu") && cleanPassword === "aprendiz789";
-
-    if (isAdminRole && isAdminUser) {
-      router.replace("/(protected)/(admin)");
-    } else if (isTeacherRole && isTeacherUser) {
-      router.replace("/(protected)/(teacher)");
-    } else if (isStudentRole && isStudentUser) {
-      router.replace("/(protected)/(tabs)");
-    } else {
-      Alert.alert(
-        "Error de autenticación",
-        "El correo, contraseña o rol no coinciden.\n\nCredenciales de prueba:\n• Aprendiz: aprendiz@soy.easymatric.edu / aprendiz789\n• Instructor: instructor@soy.easymatric.edu / instructor124\n• Admin: admin@soy.easymatric.edu / admin123"
-      );
+    if (!user) {
+      setEmailError("Este correo electrónico no está registrado");
+      return;
     }
+
+    // 4. Verificar si la contraseña coincide
+    if (user.password !== cleanPassword) {
+      setPasswordError("Contraseña incorrecta");
+      return;
+    }
+
+    // 5. Verificar si el rol seleccionado arriba coincide con la cuenta
+    if (user.role !== role) {
+      const rolesNombres = {
+        admin: "Admin",
+        teacher: "Teacher",
+        student: "Student",
+      };
+      setEmailError(
+        `Este correo pertenece al rol ${rolesNombres[user.role]}. Selecciona ese rol arriba.`
+      );
+      return;
+    }
+
+    // 6. Redirección exitosa
+    router.replace(user.route);
   };
 
   return (
@@ -91,7 +121,31 @@ export default function Login() {
         <Text style={styles.subtitle}>Inicia sesión para continuar en EasyMatric</Text>
 
         {/* SELECTOR DE ROL */}
-        <RoleSelector selectedRole={role} onSelect={setRole} />
+        <View style={styles.roleContainer}>
+          {ROLES.map((r) => {
+            const isSelected = role === r.id;
+            return (
+              <TouchableOpacity
+                key={r.id}
+                style={[styles.roleButton, isSelected && styles.selectedRoleButton]}
+                onPress={() => {
+                  setRole(r.id);
+                  if (emailError) setEmailError("");
+                }}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={r.icon}
+                  size={22}
+                  color={isSelected ? Colors.primary || "#2563EB" : "#64748B"}
+                />
+                <Text style={[styles.roleText, isSelected && styles.selectedRoleText]}>
+                  {r.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
 
         {/* CAMPO CORREO */}
         <View style={styles.fieldContainer}>
@@ -185,6 +239,34 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 20,
     textAlign: "center",
+  },
+  roleContainer: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 20,
+  },
+  roleButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: "#CBD5E1",
+    borderRadius: 12,
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    gap: 4,
+  },
+  selectedRoleButton: {
+    borderColor: Colors.primary || "#2563EB",
+    backgroundColor: "#EFF6FF",
+  },
+  roleText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#64748B",
+  },
+  selectedRoleText: {
+    color: Colors.primary || "#2563EB",
   },
   fieldContainer: {
     marginBottom: 14,
