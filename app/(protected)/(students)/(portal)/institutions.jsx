@@ -1,10 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity, ActivityIndicator } from "react-native";
-import { useRouter } from "expo-router"; // 1. Importar useRouter
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { useRouter } from "expo-router";
 import ScreenContainer from "../../../../components/ScreenContainer";
 
+// Imágenes locales (los nombres deben coincidir exactamente con tus archivos)
+const imagenesLocales = [
+  require("../../../../assets/images/cole1.jpg"),
+  require("../../../../assets/images/cole2.jpg"),
+  require("../../../../assets/images/cole3.jpg"),
+  require("../../../../assets/images/cole.4.jpg"),
+  require("../../../../assets/images/cole.5.jpg"),
+  require("../../../../assets/images/cole.6.jpg"),
+];
+
 export default function Institutions() {
-  const router = useRouter(); // 2. Inicializar router
+  const router = useRouter();
   const [instituciones, setInstituciones] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -16,7 +35,7 @@ export default function Institutions() {
         if (!respuesta.ok) throw new Error("No se pudieron cargar las instituciones.");
         const datos = await respuesta.json();
 
-        const datosAdaptados = datos.map((item) => ({
+        const datosAdaptados = datos.map((item, index) => ({
           id: item.id.toString(),
           nombre: `I.E. ${item.company.name}`,
           ubicacion: `Popayán - ${item.address.city}`,
@@ -24,7 +43,8 @@ export default function Institutions() {
           jornada: "Jornada Mañana",
           estado: item.id % 2 === 0 ? "Cupos Disponibles" : "Pocos Cupos",
           tipoEstado: item.id % 2 === 0 ? "disponible" : "pocos",
-          imagen: "https://via.placeholder.com/400x200",
+          // Si hay más instituciones que imágenes, se repiten en ciclo
+          imagen: imagenesLocales[index % imagenesLocales.length],
         }));
 
         setInstituciones(datosAdaptados);
@@ -74,7 +94,7 @@ export default function Institutions() {
             {instituciones.map((item) => (
               <View key={item.id} style={styles.card}>
                 <View style={styles.imageContainer}>
-                  <Image source={{ uri: item.imagen }} style={styles.cardImage} />
+                  <Image source={item.imagen} style={styles.cardImage} />
                   <View
                     style={[
                       styles.badge,
@@ -95,13 +115,12 @@ export default function Institutions() {
                     <Text style={styles.detailItem}>🕒 {item.jornada}</Text>
                   </View>
 
-                  {/* 3. Evento onPress configurado */}
                   <TouchableOpacity
                     style={styles.btnMore}
                     activeOpacity={0.8}
                     onPress={() =>
                       router.push({
-                        pathname: "/institution-detail", // Ajusta esta ruta a tu archivo/pantalla
+                        pathname: "/institution-detail", // Ajusta esta ruta a tu pantalla
                         params: { id: item.id, nombre: item.nombre, ubicacion: item.ubicacion },
                       })
                     }
@@ -117,8 +136,6 @@ export default function Institutions() {
     </ScreenContainer>
   );
 }
-
-// Manten los mismos estilos...
 
 const styles = StyleSheet.create({
   scrollContent: {
