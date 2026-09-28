@@ -10,6 +10,7 @@ const SCREEN_TITLES = {
   catalogs: "Catálogos",
   perfil: "Perfil",
   documentation: "Revisión Documentación",
+  reports: "Reportes",
 };
 
 const SCREEN_META = {
@@ -21,6 +22,7 @@ const SCREEN_META = {
   catalogs: { label: "Catálogos", icon: "folder-open-outline" },
   perfil: { label: "Perfil", icon: "person-outline" },
   documentation: { label: "Documentación", icon: "checkbox-outline" },
+  reports: { label: "Reportes", icon: "bar-chart-outline" },
 };
 
 export default function AdminLayout() {
@@ -59,6 +61,7 @@ export default function AdminLayout() {
         name="documentation"
         options={{ title: "Revisión Documentación" }}
       />
+      <Drawer.Screen name="reports" options={{ title: "Reportes" }} />
     </Drawer>
   );
 }
