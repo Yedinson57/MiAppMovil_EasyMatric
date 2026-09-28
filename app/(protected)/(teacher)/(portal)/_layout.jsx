@@ -1,13 +1,14 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import Colors from "../../../constants/colors";
 
-export default function TabsLayout() {
+const BRAND = "#152e4d";
+
+export default function TeacherTabsLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary,
+        tabBarActiveTintColor: BRAND,
         tabBarInactiveTintColor: "#9CA3AF",
         tabBarStyle: {
           height: 65,
@@ -25,44 +26,37 @@ export default function TabsLayout() {
           ),
         }}
       />
-
       <Tabs.Screen
-        name="institutions"
+        name="modules"
         options={{
-          title: "Instituciones",
+          title: "Mis Módulos",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="business-outline" size={size} color={color} />
+            <Ionicons name="book-outline" size={size} color={color} />
           ),
         }}
       />
-
       <Tabs.Screen
-        name="enrollments"
+        name="upload"
         options={{
-          title: "Matrículas",
+          title: "Subir Módulo",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text-outline" size={size} color={color} />
+            <Ionicons name="cloud-upload-outline" size={size} color={color} />
           ),
         }}
       />
-
-      <Tabs.Screen
-        name="catalogs"
-        options={{
-          title: "Catálogos",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="library-outline" size={size} color={color} />
-          ),
-        }}
-      />
-
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Perfil",
+          title: "Mi Perfil",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="group"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

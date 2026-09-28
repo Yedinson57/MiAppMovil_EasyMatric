@@ -35,7 +35,7 @@ const DEMO_USERS = {
   "aprendiz@soy.easymatric.edu": {
     password: "aprendiz789",
     role: "student",
-    route: "/(protected)/(tabs)",
+    route: "/(protected)/(students)",
   },
 };
 

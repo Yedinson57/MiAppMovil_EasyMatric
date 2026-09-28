@@ -1,7 +1,7 @@
 import React from "react";
 import {View,Text,StyleSheet,ScrollView,TouchableOpacity,} from "react-native";
 import { Feather } from "@expo/vector-icons";
-import ScreenContainer from "../../../components/ScreenContainer";
+import ScreenContainer from "../../../../components/ScreenContainer";
 
 export default function Enrollment() {
   return (

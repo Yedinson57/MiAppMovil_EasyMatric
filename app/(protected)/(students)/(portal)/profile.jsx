@@ -2,10 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, Platform, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
-import ScreenContainer from "../../../components/ScreenContainer";
-import Colors from "../../../constants/colors";
+import ScreenContainer from "../../../../components/ScreenContainer";
+import Colors from "../../../../constants/colors";
 
-const usuario = require("../../../assets/img01.png");
+const usuario = require("../../../../assets/img01.png");
 
 const datosPersonales = [
   ["Primer Nombre", "Juan"],
@@ -22,7 +22,7 @@ export default function Profile() {
   const [notifEmail, setNotifEmail] = useState(true);
   const [accesibilidad, setAccesibilidad] = useState(false);
 
-  const irEditarPerfil = () => router.push("/(protected)/(tabs)/profile");
+  const irEditarPerfil = () => router.push("/(protected)/(students)/profile");
   const irCambiarContrasena = () => router.push("/(auth)/forgot_password");
   const cerrarSesion = () => router.replace("/(auth)/login");
 

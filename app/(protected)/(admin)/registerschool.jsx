@@ -50,7 +50,7 @@ export default function RegisterSchool() {
       [
         {
           text: "Aceptar",
-          onPress: () => router.replace("/(protected)/(tabs)"),
+          onPress: () => router.replace("/(protected)/(admin)"),
         },
       ]
     );

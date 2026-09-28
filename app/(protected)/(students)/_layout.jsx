@@ -1,7 +1,7 @@
 import { Drawer } from "expo-router/drawer";
 import InstitutionalDrawer, { BRAND } from "../../../components/RoleDrawer";
 
-export default function TeacherLayout() {
+export default function StudentsLayout() {
   return (
     <Drawer
       drawerContent={(props) => <InstitutionalDrawer {...props} />}
@@ -11,13 +11,13 @@ export default function TeacherLayout() {
         headerStyle: { backgroundColor: BRAND },
         headerTintColor: "#fff",
         drawerStyle: { backgroundColor: "#FFFFFF", width: 300 },
-        title: "Docente",
+        title: "Estudiante",
       }}
     >
       <Drawer.Screen
         name="(portal)"
         options={{
-          title: "Docente",
+          title: "Estudiante",
           drawerItemStyle: { display: "none" },
         }}
       />

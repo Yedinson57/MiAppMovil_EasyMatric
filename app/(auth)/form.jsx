@@ -33,7 +33,7 @@ export default function Form() {
       router.replace("/(protected)/(teacher)");
     } else {
       // Estudiante
-      router.replace("/(protected)/(tabs)");
+      router.replace("/(protected)/(students)");
     }
   }
 

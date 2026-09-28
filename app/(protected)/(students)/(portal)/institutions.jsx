@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router"; // 1. Importar useRouter
-import ScreenContainer from "../../../components/ScreenContainer";
+import ScreenContainer from "../../../../components/ScreenContainer";
 
 export default function Institutions() {
   const router = useRouter(); // 2. Inicializar router

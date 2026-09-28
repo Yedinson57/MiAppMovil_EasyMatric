@@ -6,9 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import ScreenContainer from "../../../components/ScreenContainer";
-import Header from "../../../components/Header";
-import Colors from "../../../constants/colors";
+import ScreenContainer from "../../../../components/ScreenContainer";
+import Header from "../../../../components/Header";
+import Colors from "../../../../constants/colors";
 
 export default function HomeScreen() {
   return (
@@ -48,7 +48,7 @@ export default function HomeScreen() {
           </View>
 
           <Image
-            source={require("../../../assets/img02.png")}
+            source={require("../../../../assets/img02.png")}
             style={styles.bannerImage}
             resizeMode="contain"
           />
