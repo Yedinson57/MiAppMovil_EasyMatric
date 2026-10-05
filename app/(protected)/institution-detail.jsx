@@ -109,7 +109,10 @@ export default function InstitutionDetailScreen() {
             <FontAwesome5 name="rocket" size={14} color="#FFFFFF" style={{ marginLeft: 8 }} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.supportButton}>
+          <TouchableOpacity 
+            style={styles.supportButton}
+            onPress={() => router.push('/contact')}
+          >
             <Ionicons name="logo-whatsapp" size={18} color="#25D366" />
             <Text style={styles.supportButtonText}>¿Necesitas soporte?</Text>
           </TouchableOpacity>

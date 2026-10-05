@@ -61,12 +61,6 @@ export default function AdminHome() {
       route: "/(protected)/(admin)/matriculas",
     },
     {
-      id: "3",
-      title: "Revisar Docs",
-      icon: "checkbox-outline",
-      route: "/(protected)/(admin)/documentation",
-    },
-    {
       id: "4",
       title: "Generar Reportes",
       icon: "bar-chart-outline",
@@ -83,7 +77,7 @@ export default function AdminHome() {
       {/* CABECERA */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>¡Hola, Administrador! 👋</Text>
+          <Text style={styles.greeting}>¡Hola, Juan Andres! 👋</Text>
           <Text style={styles.subtitle}>
             Resumen general del sistema EasyMatric
           </Text>
