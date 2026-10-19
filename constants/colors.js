@@ -6,14 +6,15 @@ const Colors = {
   background: "#F8FAFC",
   surface: "#FFFFFF",
 
-  text: "#1F2937",
-  textSecondary: "#6B7280",
+  text: "#0F172A",
+  textSecondary: "#64748B",
 
   success: "#10B981",
   warning: "#F59E0B",
   danger: "#EF4444",
 
-  border: "#E5E7EB",
+  border: "#E2E8F0",
+  borderFocus: "#2563EB",
 
   drawerBackground: "#FFFFFF",
   overlay: "rgba(0,0,0,0.35)",

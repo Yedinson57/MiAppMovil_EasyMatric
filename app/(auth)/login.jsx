@@ -1,17 +1,13 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import ScreenContainer from "../../components/ScreenContainer";
 import Logo from "../../components/Logo";
+import TextInput from "../../components/AppTextInput";
 import Colors from "../../constants/colors";
+import { radius, shadows, spacing } from "../../constants/theme";
 
 // Definición de roles con sus íconos
 const ROLES = [

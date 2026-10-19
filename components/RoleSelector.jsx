@@ -1,81 +1,72 @@
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 import Colors from "../constants/colors";
+import { radius, shadows, spacing } from "../constants/theme";
 
-export default function RoleSelector({
-  selectedRole,
-  onSelect,
-}) {
+export default function RoleSelector({ selectedRole, onSelect }) {
+  const roles = [
+    { id: "student", label: "Student", icon: "🎓" },
+    { id: "teacher", label: "Teacher", icon: "👨‍🏫" },
+  ];
+
   return (
-
     <View style={styles.container}>
-
-      <TouchableOpacity
-        style={[
-          styles.card,
-          selectedRole === "student" && styles.active,
-        ]}
-        onPress={() => onSelect("student")}
-      >
-        <Text style={styles.icon}>🎓</Text>
-
-        <Text style={styles.text}>
-          Student
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[
-          styles.card,
-          selectedRole === "teacher" && styles.active,
-        ]}
-        onPress={() => onSelect("teacher")}
-      >
-        <Text style={styles.icon}>👨‍🏫</Text>
-
-        <Text style={styles.text}>
-          Teacher
-        </Text>
-      </TouchableOpacity>
-
+      {roles.map((role) => {
+        const active = selectedRole === role.id;
+        return (
+          <TouchableOpacity
+            key={role.id}
+            style={[styles.card, active ? styles.active : styles.inactive]}
+            onPress={() => onSelect(role.id)}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.icon}>{role.icon}</Text>
+            <Text style={[styles.text, active && styles.activeText]}>
+              {role.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
-
   );
 }
 
 const styles = StyleSheet.create({
-
-  container:{
-    flexDirection:"row",
-    justifyContent:"space-between",
-    marginVertical:30,
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: spacing.md,
   },
-
-  card:{
-    flex:1,
-    height:90,
-    borderWidth:1,
-    borderColor:Colors.border,
-    borderRadius:16,
-    justifyContent:"center",
-    alignItems:"center",
-    backgroundColor:"#fff",
-    marginHorizontal:6,
+  card: {
+    flex: 1,
+    minHeight: 96,
+    borderWidth: 1,
+    borderRadius: radius.lg,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.surface,
+    marginHorizontal: 6,
+    paddingVertical: 16,
   },
-
-  active:{
-    backgroundColor:Colors.primaryLight,
-    borderColor:Colors.primary,
-    borderWidth:2,
+  inactive: {
+    borderColor: Colors.border,
   },
-
-  icon:{
-    fontSize:28,
+  active: {
+    backgroundColor: Colors.primaryLight,
+    borderColor: Colors.primary,
+    borderWidth: 2,
+    ...shadows.card,
   },
-
-  text:{
-    marginTop:8,
-    fontWeight:"600",
-    color:Colors.text,
-  }
-
+  icon: {
+    fontSize: 28,
+  },
+  text: {
+    marginTop: 8,
+    fontWeight: "600",
+    color: Colors.textSecondary,
+  },
+  activeText: {
+    color: Colors.primary,
+    fontWeight: "700",
+  },
 });

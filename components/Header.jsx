@@ -42,9 +42,9 @@ export default function Header({
 const styles = StyleSheet.create({
 
   container:{
-    paddingHorizontal:20,
-    paddingTop:15,
-    paddingBottom:20,
+    paddingHorizontal:16,
+    paddingTop:16,
+    paddingBottom:24,
   },
 
   topRow:{
