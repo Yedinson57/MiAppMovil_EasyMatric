@@ -15,7 +15,7 @@ const ROLES = [
   { id: "teacher", label: "Teacher", icon: "person-outline" },
   { id: "admin", label: "Admin", icon: "shield-checkmark-outline" },
 ];
-
+//diccionariio
 // Diccionario de usuarios demo válidos
 const DEMO_USERS = {
   "admin@soy.easymatric.edu": {
