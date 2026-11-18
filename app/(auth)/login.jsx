@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 //importaciones
-import ScreenContainer from "../../components/ScreenContainer";
-import Logo from "../../components/Logo";
 import TextInput from "../../components/AppTextInput";
+import Logo from "../../components/Logo";
+import ScreenContainer from "../../components/ScreenContainer";
 import Colors from "../../constants/colors";
-import { radius, shadows, spacing } from "../../constants/theme";
-
 // Definición de roles con sus íconos
 const ROLES = [
   { id: "student", label: "Student", icon: "school-outline" },
