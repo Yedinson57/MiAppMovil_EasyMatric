@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-
+//importaciones
 import ScreenContainer from "../../components/ScreenContainer";
 import Logo from "../../components/Logo";
 import TextInput from "../../components/AppTextInput";
